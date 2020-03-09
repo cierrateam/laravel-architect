@@ -18,6 +18,11 @@ Laravel Architect was created by, and is maintained by [Vittorio Emmermann](http
 
 ------
 
+## Installation
+
+To install Laravel Architect we recomment to install it globally to gather the best usage of this package:
+`composer global require "cierrateam/laravel-architect"`
+
 ## Documentation
 
 Here is work in progress :) Feel free to contribute.
