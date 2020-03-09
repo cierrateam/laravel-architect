@@ -1,5 +1,5 @@
 <p align="center">
-    <img title="Laravel Architect" height="100" src="https://user-images.githubusercontent.com/24706440/76251424-3cc58880-6247-11ea-8f46-944896470c6b.png" />
+    <img title="Laravel Architect" height="300" src="https://user-images.githubusercontent.com/24706440/76251424-3cc58880-6247-11ea-8f46-944896470c6b.png" />
 </p>
 
 <p align="center">
