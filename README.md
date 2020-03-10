@@ -25,9 +25,30 @@ To install Laravel Architect we recomment to install it globally to gather the b
 
 But at the moment you have to add `"minimum-stability": "dev"` to your global composer config, because laravel zero is only available in dev for laravel 7. Sorry for that, we'll update here asap.
 
-## Documentation
+## Usage
 
 Here is work in progress :) Feel free to contribute.
+
+### Create a new package
+``` 
+architect init
+``` 
+Then just answer the questions.
+
+### Create a new test
+``` 
+architect make:test ExampleTest
+```
+A test will be created
+
+## Roadmap
+- [x] Creating Packages with architect
+- [x] Creating Tests with architect
+- [ ] Creating Models, Controllers and migrations
+- [ ] Customising stubs
+- [ ] More options while creating packages
+- [ ] Run package tests with architect
+- [ ] Install local path packages with architect in projects
 
 ## License
 
