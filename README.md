@@ -8,7 +8,7 @@
   <a href="https://github.com/cierrateam/laravel-architect"><img alt="GitHub license" src="https://img.shields.io/github/license/cierrateam/laravel-architect"></a>
 </p>
 
-<h4> <center>This is a <bold>community project</bold> and not an official Laravel one </center></h4>
+<h4> <center>This package is under construction. Feel free to contribute. </center></h4>
 
 Laravel Architect was created by, and is maintained by [Vittorio Emmermann](https://github.com/vittoroe), founder of cierra. It's a helper you can install global to your machine or local to your package to make it easier to develop them. So for example if you want to create a test to your laravel package, you can easily do this with `architect make:test MyAwesomeTest`
 

@@ -16,7 +16,7 @@ class {{ UCNAME }}ServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__.'/Config/{{ NAME }}.php' => config_path('{{ NAME }}.php'),
-        ], '{{ NAME }}_config');
+        ], '{{ NAME }}-config');
 
 
         //if ($this->app->runningInConsole()) {
