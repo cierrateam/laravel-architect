@@ -43,46 +43,39 @@ class InitPackage extends Command
      */
     public function handle()
     {
+        // Define all the basements for the package, ask for info.
         $creator = $this->getCreator();
         $package_name = $this->getPackageName();
         $this->getAuthorName();
         $this->getAuthorMail();
         $directory = 'packages' . DIRECTORY_SEPARATOR . $creator . DIRECTORY_SEPARATOR . $package_name;
-        $full_directory = getcwd() . DIRECTORY_SEPARATOR . $directory;
         $this->full_directory = getcwd() . DIRECTORY_SEPARATOR . $directory;
-        if ($this->confirm('Do you wish to create the directory ' . $directory . '?', 'yes')) {
-            $this->task("Creating " . $directory, function () use ($full_directory) {
 
-                // exit if directory exists
-                if (is_dir($full_directory)) {
-                    $this->error($full_directory . ' already exists!');
-                    return false;
-                }
-                // try to create the directory, failing if not successful
-                try {
-                    return mkdir($full_directory, 0775, true);
-                } catch (\Exception $exception) {
-                    return false;
-                }
-            });
+        // create the working directory or redefine to current working directory.
+        if ($this->confirm('Do you wish to create the directory ' . $directory . '?', 'yes')) {
+            $this->createPackageDirectory($directory);
         } else {
             // if he don't want to create, does he want to work in current directory instead?
             if ($this->confirm('So you want to continue in current directory?')) {
-                $full_directory = getcwd();
+                $this->full_directory = getcwd();
             } else {
                 $this->info('Ok. Bye bye 👋🏼');
-                return true; // end here, no work to do.
+                return true; // end here, no work to do. Dead end.
             }
         }
 
+        // load all the stubs and replace the vars
+        $this->createPackageBoilerplate();
 
-        $this->createPackageBoilerplate($full_directory);
+        // optionally load the package to the composer
+        $this->writeProjectsComposerFile();
 
-
+        $this->info('🎉 All done! You can start coding now 🚀');
     }
 
-    private function createPackageBoilerplate(string $full_directory)
+    private function createPackageBoilerplate()
     {
+        $full_directory = $this->full_directory;
         $context = $this;
         $this->info('Installing boilerplate.');
         $this->task('Creating src directory', function () use ($full_directory) {
@@ -183,6 +176,11 @@ class InitPackage extends Command
         return $this->full_directory . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR;
     }
 
+    public function getRelativeSrcDir()
+    {
+        return 'packages' . DIRECTORY_SEPARATOR . $this->creator . DIRECTORY_SEPARATOR . $this->package_name . DIRECTORY_SEPARATOR . 'src';
+    }
+
     /**
      * @param string $storeKey
      * @param string $question
@@ -220,23 +218,25 @@ class InitPackage extends Command
     public function getComposerFileContent()
     {
         return Collection::make([
-            'name' => $this->package_name,
+            'name' => $this->creator . '/' . $this->package_name,
             'description' => 'Another awesome laravel package',
             'license' => 'MIT',
             'type' => 'library',
-            'require' => [
-                'php' => ">=7.2",
-                'illuminate/support' => '7.*'
-            ],
             'authors' => [[
                 'name' => $this->author,
                 'email' => $this->author_mail
             ]],
+            'require' => [
+                'php' => ">=7.2",
+                'illuminate/support' => '7.*'
+            ],
             'autoload' => [
                 'psr-4' => [
                     $this->getPackageNamespace() . '\\' => 'src/',
                 ]
             ],
+            'minimum-stability' => "dev",
+            'prefer-stable' => true,
             'extra' => [
                 'laravel' => [
                     'providers' => [
@@ -244,8 +244,67 @@ class InitPackage extends Command
                     ]
                 ]
             ],
-            'minimum-stability' => "dev",
         ])->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     }
+
+    public function writeProjectsComposerFile()
+    {
+        if ($this->confirm('Do you want to add the package to the composer.json of your project?', 'yes')) {
+            $project_composer_file = file_get_contents(getcwd() . DIRECTORY_SEPARATOR . 'composer.json');
+            $project_composer = json_decode($project_composer_file, true);
+            $project_composer['autoload']['psr-4'][$this->getPackageNamespace() . '\\'] = $this->getRelativeSrcDir();
+            file_put_contents(
+                getcwd() . DIRECTORY_SEPARATOR . 'composer.json',
+                json_encode($project_composer, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+            );
+
+            $this->info('Your project`s composer.json file has been updated.');
+
+            $this->comment('Seems like the only thing left is to dump the composer autoload...');
+                if ($this->confirm('Do you want to dump composer auto-load?', 'yes')) {
+                    if ($this->confirm('Do you have composer command in your path?', 'yes')) {
+                        print shell_exec('composer dump-autoload');
+                    } else {
+                        if ($this->confirm('Do you want me to try using the downloaded binary?', 'yes')) {
+                            $c_path = base_path('vendor/composer/composer/bin/composer');
+                            print shell_exec($c_path . ' dump-autoload');
+                        } else {
+                            $c_path = $this->ask('Please specify the full composer executable file path');
+                            print shell_exec($c_path . ' dump-autoload');
+                        }
+                    }
+                    $this->table(['namespace', 'path'], [[
+                        'namespace' => $this->getPackageNamespace(),
+                        'path' => $this->getSrcDir()
+                    ]]);
+                } else {
+                    $this->line('Skipping the composer dump autoload...');
+                    $this->line('Please manually dump the autoload: composer dump-autoload');
+                }
+        }
+    }
+
+    /**
+     * @param string $directory
+     */
+    public function createPackageDirectory(string $directory): void
+    {
+        $context = $this;
+        $this->task("Creating " . $directory, function () use ($context) {
+
+            // exit if directory exists
+            if (is_dir($context->full_directory)) {
+                $this->error($context->full_directory . ' already exists!');
+                return false;
+            }
+            // try to create the directory, failing if not successful
+            try {
+                return mkdir($context->full_directory, 0775, true);
+            } catch (\Exception $exception) {
+                return false;
+            }
+        });
+    }
+
 
 }
