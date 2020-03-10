@@ -53,3 +53,10 @@ A test will be created
 ## License
 
 Laravel Architect is an open-source software licensed under the [MIT license](https://github.com/laravel-architect/laravel-architect/blob/stable/LICENSE.md).
+
+## Credits
+This package is made by cierra and is coded with support of community packages.
+
+<a href="https://cierra.de">
+    <img title="cierra" height="50" src="https://assets.website-files.com/5d481a8da904cda6ec05cf74/5d481a8da904cdba4d05cfad_cierra-logo.png" />
+</a>
