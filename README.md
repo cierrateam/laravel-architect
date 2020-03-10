@@ -21,9 +21,14 @@ Laravel Architect was created by, and is maintained by [Vittorio Emmermann](http
 ## Installation
 
 To install Laravel Architect we recomment to install it globally to gather the best usage of this package:<br />
-`composer global require "cierrateam/laravel-architect"`
+`composer global require "cierrateam/laravel-architect"`<br/>
+Then run `architect inspiring` to ensure the package is installed.
 
 But at the moment you have to add `"minimum-stability": "dev"` to your global composer config, because laravel zero is only available in dev for laravel 7. Sorry for that, we'll update here asap.
+
+Alternatively you can install it locally to a project:<br/>
+`composer global require "cierrateam/laravel-architect"`<br/>
+But then you hace to run `php vendor/bin/architect` instead of only `architect`. Hint: Create a alias ;)
 
 ## Usage
 
