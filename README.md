@@ -10,7 +10,7 @@
 
 <h4> <center>This package is under construction. Feel free to contribute. </center></h4>
 
-Laravel Architect was created by, and is maintained by [Vittorio Emmermann](https://github.com/vittoroe), founder of cierra. It's a helper you can install global to your machine or local to your package to make it easier to develop them. So for example if you want to create a test to your laravel package, you can easily do this with `architect make:test MyAwesomeTest`
+Laravel Architect was created by, and is maintained by [Vittorio Emmermann](https://github.com/vittorioe), founder of [cierra](https://cierra.de/). It's a helper you can install global to your machine or local to your package to make it easier to develop them. So for example if you want to create a test to your laravel package, you can easily do this with `architect make:test MyAwesomeTest`
 
 - Built on top of the [Laravel Zero](https://laravel-zero.com/).
 - Installable global to your machine as general helper.
