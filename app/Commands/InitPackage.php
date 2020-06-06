@@ -5,6 +5,7 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use LaravelZero\Framework\Commands\Command;
@@ -89,6 +90,9 @@ class InitPackage extends Command
         });
         $this->task('Creating the composer file for you', function () use($context) {
             return $context->createComposerFile();
+        });
+        $this->task('Creating tests folder', function () use($context) {
+            return $context->createTestsFolder($context);
         });
     }
 
@@ -230,9 +234,22 @@ class InitPackage extends Command
                 'php' => ">=7.2",
                 'illuminate/support' => '7.*'
             ],
+            'require-dev' => [
+                "psy/psysh" => "@stable",
+                "phpunit/phpunit" => "^9.0",
+                "orchestra/testbench" => "^5.3",
+                "mockery/mockery" => "^1.3.1",
+                "laravel/framework" => "^7.0",
+            ],
             'autoload' => [
                 'psr-4' => [
                     $this->getPackageNamespace() . '\\' => 'src/',
+                ]
+            ],
+            'autoload-dev' => [
+                'psr-4' => [
+                    'App\\' => 'vendor/orchestra/testbench-core/laravel/app',
+                    'Tests\\' => 'tests/'
                 ]
             ],
             'minimum-stability' => "dev",
@@ -304,6 +321,29 @@ class InitPackage extends Command
                 return false;
             }
         });
+    }
+
+    public function createTestsFolder($context)
+    {
+        try {
+            $tests_dir = $this->full_directory . DIRECTORY_SEPARATOR . 'Tests';
+            mkdir($tests_dir);
+            mkdir($tests_dir . DIRECTORY_SEPARATOR . 'views');
+            mkdir($tests_dir . DIRECTORY_SEPARATOR . 'views'. DIRECTORY_SEPARATOR . 'layouts');
+            $content_testcase = $this->generateFileContents('testcase');
+            $content_layout = $this->generateFileContents('applayout');
+            $content_phpunit = $this->generateFileContents('phpunit');
+        } catch (\Exception $e) {
+            Log::critical($e->getMessage());
+            return false;
+        }
+
+        return file_put_contents($tests_dir . DIRECTORY_SEPARATOR . 'TestCase.php', $content_testcase)
+            && file_put_contents($tests_dir . DIRECTORY_SEPARATOR .
+                    'views'. DIRECTORY_SEPARATOR .
+                    'layouts'. DIRECTORY_SEPARATOR .
+                    'app.blade.php', $content_layout)
+            && file_put_contents($this->full_directory . DIRECTORY_SEPARATOR . 'phpunit.xml', $content_phpunit);
     }
 
 
