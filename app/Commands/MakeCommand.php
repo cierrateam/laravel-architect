@@ -35,7 +35,7 @@ final class MakeCommand extends ConsoleMakeCommand
 //            return $dir.'/stubs/unit-test.stub';
 //        }
 
-        return $dir.'/stubs/command.stub';
+        return $dir. DIRECTORY_SEPARATOR .'stubs'. DIRECTORY_SEPARATOR .'command.stub';
     }
 
     /**
@@ -56,7 +56,7 @@ final class MakeCommand extends ConsoleMakeCommand
     protected function getPath($name)
     {
         $name = Str::replaceFirst($this->rootNamespace(), '', $name);
-        $dir = getcwd().'/src/Commands/';
+        $dir = getcwd(). DIRECTORY_SEPARATOR .'src'. DIRECTORY_SEPARATOR .'Commands'. DIRECTORY_SEPARATOR;
         if(!is_dir($dir)) {
             mkdir($dir);
         }

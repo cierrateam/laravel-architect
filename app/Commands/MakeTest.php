@@ -35,7 +35,7 @@ final class MakeTest extends TestMakeCommand
 //            return $dir.'/stubs/unit-test.stub';
 //        }
 
-        return $dir.'/stubs/test.stub';
+        return $dir. DIRECTORY_SEPARATOR .'stubs'. DIRECTORY_SEPARATOR .'test.stub';
     }
 
     /**

@@ -1,0 +1,2 @@
+- Added a new Command Creator Command
+- Added version command for getting current architect version
